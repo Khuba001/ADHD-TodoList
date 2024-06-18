@@ -45,7 +45,15 @@ body {
   text-align: center;
 }
 .welcome-app {
-  margin-bottom: 4rem;
+  margin-bottom: 6rem;
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+}
+.time-now {
+  font-size: 2rem;
+  margin-right: 12rem;
+  width: 5rem;
 }
 .welcome-text {
   font-size: 4rem;
@@ -62,6 +70,8 @@ body {
   font-family: inherit;
   border-radius: 9px;
   border: none;
+  background-color: #495057;
+  color: #fff;
 }
 .btn-add {
   padding: 3.2rem 2rem 3.1rem 2.4rem;
@@ -98,4 +108,31 @@ body {
   padding: 3.2rem 2rem 3.1rem 2.4rem;
   background-color: #6843d6;
   border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+
+  transition: all 0.3s;
+}
+
+.tasks-list-item:active {
+  opacity: 0.5;
+  background-color: #adb5bd;
+  border: 2px dashed #fff;
+  cursor: grabbing;
+}
+.task-after {
+  background-color: #fff;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  cursor: pointer;
+
+  transition: all 0.3s;
+}
+.tasks-list-item-finished {
+  text-decoration: line-through;
+  color: #adb5bd;
+}
+.task-after-finished {
+  background-color: #495057;
 }

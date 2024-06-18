@@ -7,6 +7,10 @@ const tasks = document.querySelectorAll(".tasks-list-item");
 const taskContainer = document.querySelector(".task-container");
 
 const dateCurrent = document.querySelector(".welcome-span");
+const timeCurrent = document.querySelector(".time-now");
+
+const leftSide = document.querySelector(".nav");
+const rightSide = document.querySelector(".calendar");
 
 const addTask = function () {
   const taskName = inputTask.value;
@@ -15,7 +19,7 @@ const addTask = function () {
   else {
     let markup = `
     <div class='task-container'>
-    <li class="tasks-list-item">${taskName}</li>
+    <li class="tasks-list-item" draggable='true'>${taskName}<span class='task-after'></span></li>
     </div>
       `;
 
@@ -31,15 +35,11 @@ btnAdd.addEventListener("click", (e) => {
 });
 
 taskList.addEventListener("click", (e) => {
-  if (e.target.classList.contains("tasks-list-item")) {
-    e.target.classList.toggle("tasks-list-item-finished");
-    // e.target.style.backgroundColor = "blue";
-  }
-  if (e.target.classList.contains("icon")) {
-    const clickedContainer = e.target.closest(".task-container");
-    if (clickedContainer) {
-      clickedContainer.remove();
-    }
+  if (e.target.classList.contains("task-after")) {
+    console.log(e.target);
+    const el = e.target.closest(".tasks-list-item");
+    el.classList.toggle("tasks-list-item-finished");
+    e.target.classList.toggle("task-after-finished");
   }
 });
 
@@ -53,7 +53,38 @@ const currentDateDisplay = function () {
   const seconds = String(now.getSeconds()).padStart(2, "0");
 
   dateCurrent.textContent = `${day}/${month}/${year}`;
+  timeCurrent.textContent = `${hour}:${minute}:${seconds}`;
 };
+let beignDragged;
+
+taskList.addEventListener("dragstart", (e) => {
+  if (e.target.classList.contains("tasks-list-item")) {
+    beignDragged = e.target;
+    console.log(beignDragged);
+  }
+});
+
+leftSide.addEventListener("dragover", (e) => {
+  e.preventDefault();
+});
+
+leftSide.addEventListener("drop", (e) => {
+  e.preventDefault();
+  if (beignDragged) {
+    beignDragged.remove();
+    beignDragged;
+  }
+});
+
+rightSide.addEventListener("dragover", (e) => e.preventDefault());
+
+rightSide.addEventListener("drop", function () {
+  e.preventDefault();
+  if (beignDragged) {
+    beignDragged.remove();
+    beignDragged;
+  }
+});
 
 currentDateDisplay();
 
