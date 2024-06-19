@@ -136,3 +136,64 @@ body {
 .task-after-finished {
   background-color: #495057;
 }
+
+/* CALENDAR */
+
+.calendar-section {
+  padding: 4rem;
+}
+.calendar-date-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  margin-bottom: 3rem;
+}
+.calendar-date {
+  text-align: center;
+  font-size: 2rem;
+}
+.calendar-month {
+  text-align: center;
+  font-size: 2.2rem;
+}
+.icon-left,
+.icon-right {
+  font-size: 2rem;
+  cursor: pointer;
+  position: absolute;
+}
+.icon-left {
+  left: 0;
+  /* transform: translateX(-25%); */
+}
+.icon-right {
+  right: 0;
+  /* transform: translateX(25%); */
+}
+
+.calendar-weekdays {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+.dates {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  justify-items: center;
+}
+.date {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+  margin: auto;
+  font-weight: 600;
+}
