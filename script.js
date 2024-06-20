@@ -44,7 +44,6 @@ btnAdd.addEventListener("click", (e) => {
 
 taskList.addEventListener("click", (e) => {
   if (e.target.classList.contains("task-after")) {
-    console.log(e.target);
     const el = e.target.closest(".tasks-list-item");
     el.classList.toggle("tasks-list-item-finished");
     e.target.classList.toggle("task-after-finished");
@@ -52,13 +51,13 @@ taskList.addEventListener("click", (e) => {
 });
 
 const currentDateDisplay = function () {
-  now = new Date();
-  const day = String(now.getDate()).padStart(2, "0");
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const year = now.getFullYear();
-  const hour = String(now.getHours()).padStart(2, "0");
-  const minute = String(now.getMinutes()).padStart(2, "0");
-  const seconds = String(now.getSeconds()).padStart(2, "0");
+  const current = new Date();
+  const day = String(current.getDate()).padStart(2, "0");
+  const month = String(current.getMonth() + 1).padStart(2, "0");
+  const year = current.getFullYear();
+  const hour = String(current.getHours()).padStart(2, "0");
+  const minute = String(current.getMinutes()).padStart(2, "0");
+  const seconds = String(current.getSeconds()).padStart(2, "0");
 
   dateCurrent.textContent = `${day}/${month}/${year}`;
   timeCurrent.textContent = `${hour}:${minute}:${seconds}`;
@@ -69,7 +68,6 @@ let beignDragged;
 taskList.addEventListener("dragstart", (e) => {
   if (e.target.classList.contains("tasks-list-item")) {
     beignDragged = e.target;
-    console.log(beignDragged);
   }
 });
 
@@ -81,7 +79,6 @@ leftSide.addEventListener("drop", (e) => {
   e.preventDefault();
   if (beignDragged) {
     beignDragged.remove();
-    beignDragged;
   }
 });
 
@@ -91,7 +88,6 @@ rightSide.addEventListener("drop", function (e) {
   e.preventDefault();
   if (beignDragged) {
     beignDragged.remove();
-    beignDragged;
   }
 });
 
@@ -101,7 +97,6 @@ setInterval(currentDateDisplay, 1000);
 // CALENDAR FUNCTIONS
 
 const updateCalendar = function () {
-  now = new Date();
   const month = now.getMonth();
   const year = now.getFullYear();
   const day = now.getDate();
@@ -113,20 +108,47 @@ const updateCalendar = function () {
     year: "numeric",
   });
 
+  // CURRENT MONTH
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
-  const firstDayIndex = firstDay.getDate();
-  const lastDayIndex = lastDay.getDate();
+  const totalDays = lastDay.getDate();
+  const firstDayIndex = firstDay.getDay();
+  const lastDayIndex = lastDay.getDay();
 
   calendarYear.textContent = yearString;
   calendarMonth.textContent = monthString;
+  datesElement.innerHTML = "";
 
-  for (let i = firstDayIndex; i <= lastDayIndex; i++) {
+  // Days from previous month to fill the first week
+  const prevMonthLastDay = new Date(year, month, 0).getDate();
+  for (let i = firstDayIndex - 1; i >= 0; i--) {
+    datesElement.innerHTML += `<div class="date inactive">${
+      prevMonthLastDay - i
+    }</div>`;
+  }
+
+  // Days in current month
+  for (let i = 1; i <= totalDays; i++) {
     datesElement.innerHTML +=
       i === day
         ? `<div class='date active'>${i}</div>`
-        : `<div class='date inactive'>${i}</div>`;
+        : `<div class='date'>${i}</div>`;
+  }
+
+  // Days from next month to fill the last week
+  for (let i = 1; i < 7 - lastDayIndex; i++) {
+    datesElement.innerHTML += `<div class='date inactive'>${i}</div>`;
   }
 };
+
+prevBtn.addEventListener("click", function () {
+  now.setMonth(now.getMonth() - 1);
+  updateCalendar();
+});
+
+nextBtn.addEventListener("click", function () {
+  now.setMonth(now.getMonth() + 1);
+  updateCalendar();
+});
 
 updateCalendar();
