@@ -153,11 +153,13 @@ body {
 }
 .calendar-date {
   text-align: center;
-  font-size: 2rem;
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
 }
 .calendar-month {
   text-align: center;
-  font-size: 2.2rem;
+  font-size: 1.8rem;
 }
 .icon-left,
 .icon-right {
@@ -173,27 +175,30 @@ body {
   right: 0;
   /* transform: translateX(25%); */
 }
-
 .calendar-weekdays {
   display: flex;
-  align-items: center;
-  gap: 2rem;
+  gap: 1.6rem;
   font-size: 1.4rem;
-  font-weight: 600;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 2rem;
 }
 .dates {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
+  align-items: center;
+
   justify-items: center;
+  font-size: 1.2rem;
+  gap: 1.2rem;
 }
 .date {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 10px;
   cursor: pointer;
-  margin: auto;
-  font-weight: 600;
+  padding: 0.5rem;
+}
+
+.active {
+  background-color: #212529;
+  border-radius: 50%;
 }
