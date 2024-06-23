@@ -20,18 +20,21 @@ const nextBtn = document.querySelector(".icon-right");
 
 let now = new Date();
 
-const addTask = function () {
-  const taskName = inputTask.value;
+const addTask = function (date) {
+  const task = {
+    name: inputTask.value,
+    isFinished: false,
+  };
 
-  if (!taskName) alert("Okno nie może być puste!");
+  if (!task.name) alert("Okno nie może być puste!");
   else {
     let markup = `
     <div class='task-container'>
-    <li class="tasks-list-item" draggable='true'>${taskName}<span class='task-after'></span></li>
+    <li class="tasks-list-item" draggable='true'>${task.name}<span class='task-after'></span></li>
     </div>
       `;
 
-    localStorage.setItem("tasks", JSON.stringify(taskName));
+    localStorage.setItem("tasks", JSON.stringify(task.name));
     taskList.insertAdjacentHTML("beforeend", markup);
   }
 };
@@ -50,14 +53,13 @@ taskList.addEventListener("click", (e) => {
   }
 });
 
-const currentDateDisplay = function () {
-  const current = new Date();
-  const day = String(current.getDate()).padStart(2, "0");
-  const month = String(current.getMonth() + 1).padStart(2, "0");
-  const year = current.getFullYear();
-  const hour = String(current.getHours()).padStart(2, "0");
-  const minute = String(current.getMinutes()).padStart(2, "0");
-  const seconds = String(current.getSeconds()).padStart(2, "0");
+const currentDateDisplay = function (date) {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  const hour = String(date.getHours()).padStart(2, "0");
+  const minute = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
 
   dateCurrent.textContent = `${day}/${month}/${year}`;
   timeCurrent.textContent = `${hour}:${minute}:${seconds}`;
@@ -91,20 +93,20 @@ rightSide.addEventListener("drop", function (e) {
   }
 });
 
-currentDateDisplay();
-setInterval(currentDateDisplay, 1000);
+currentDateDisplay(now);
+setInterval(() => currentDateDisplay(new Date()), 1000);
 
 // CALENDAR FUNCTIONS
 
-const updateCalendar = function () {
-  const month = now.getMonth();
-  const year = now.getFullYear();
-  const day = now.getDate();
-  const monthString = now.toLocaleDateString("default", {
+const updateCalendar = function (date) {
+  const month = date.getMonth();
+  const year = date.getFullYear();
+  const day = new Date();
+  const monthString = date.toLocaleDateString("default", {
     month: "long",
   });
 
-  const yearString = now.toLocaleDateString("default", {
+  const yearString = date.toLocaleDateString("default", {
     year: "numeric",
   });
 
@@ -129,10 +131,15 @@ const updateCalendar = function () {
 
   // Days in current month
   for (let i = 1; i <= totalDays; i++) {
-    datesElement.innerHTML +=
-      i === day
-        ? `<div class='date active'>${i}</div>`
-        : `<div class='date'>${i}</div>`;
+    if (
+      i === day.getDate() &&
+      year === day.getFullYear() &&
+      month == day.getMonth()
+    ) {
+      datesElement.innerHTML += `<div class='date active'>${i}</div>`;
+    } else {
+      datesElement.innerHTML += `<div class='date'>${i}</div>`;
+    }
   }
 
   // Days from next month to fill the last week
@@ -143,12 +150,20 @@ const updateCalendar = function () {
 
 prevBtn.addEventListener("click", function () {
   now.setMonth(now.getMonth() - 1);
-  updateCalendar();
+  updateCalendar(now);
 });
 
 nextBtn.addEventListener("click", function () {
   now.setMonth(now.getMonth() + 1);
-  updateCalendar();
+  updateCalendar(now);
 });
 
-updateCalendar();
+updateCalendar(now);
+
+// DATES AND OTHER LISTS
+
+datesElement.addEventListener("click", (e) => {
+  if (e.target.classList.contains("date")) {
+    const selectedDate = e.target.dataset.date;
+  }
+});
