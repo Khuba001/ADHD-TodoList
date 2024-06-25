@@ -34,7 +34,7 @@ const addTask = function () {
       taskByDay[selectedDate] = [];
     }
     taskByDay[selectedDate].push(task);
-    localStorage.setItem("tasksByDay", JSON.stringify(taskByDay));
+    localStorage.setItem("taskByDay", JSON.stringify(taskByDay));
     renderTasks(selectedDate);
     inputTask.value = "";
   }
@@ -47,14 +47,24 @@ btnAdd.addEventListener("click", (e) => {
 
 const renderTasks = function (date) {
   taskList.innerHTML = "";
+  console.log(taskByDay[selectedDate]);
   if (taskByDay[date]) {
     taskByDay[date].forEach((task) => {
-      let markup = `
+      if (task.isFinished === true) {
+        let markup = `
       <div class='task-container'>
-      <li class="tasks-list-item" draggable='true'>${task.name}<span class='task-after'></span></li>
+      <li class="tasks-list-item tasks-list-item-finished" draggable='true'>${task.name}<span class='task-after '></span></li>
       </div>
         `;
-      taskList.insertAdjacentHTML("beforeend", markup);
+        taskList.insertAdjacentHTML("beforeend", markup);
+      } else {
+        let markup = `
+        <div class='task-container'>
+        <li class="tasks-list-item" draggable='true'>${task.name}<span class='task-after'></span></li>
+        </div>
+        `;
+        taskList.insertAdjacentHTML("beforeend", markup);
+      }
     });
   }
 };
@@ -69,7 +79,7 @@ taskList.addEventListener("click", (e) => {
     taskByDay[selectedDate].forEach((task) => {
       if (task.name === taskName) task.isFinished = !task.isFinished;
     });
-    localStorage.setItem("tasksByDay", JSON.stringify(taskByDay));
+    localStorage.setItem("taskByDay", JSON.stringify(taskByDay));
   }
 });
 
@@ -193,12 +203,12 @@ updateCalendar(now);
 datesElement.addEventListener("click", (e) => {
   if (e.target.classList.contains("date")) {
     selectedDate = e.target.getAttribute("date-data");
-    console.log(selectedDate);
+
     renderTasks(selectedDate);
 
     document
       .querySelectorAll(".date")
       .forEach((date) => date.classList.remove("active"));
+    e.target.classList.add("active");
   }
-  e.target.classList.add("active");
 });
