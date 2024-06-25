@@ -48,13 +48,9 @@ body {
   margin-bottom: 6rem;
   display: flex;
   align-items: center;
-  /* justify-content: center; */
+  justify-content: center;
 }
-.time-now {
-  font-size: 2rem;
-  margin-right: 12rem;
-  width: 5rem;
-}
+
 .welcome-text {
   font-size: 4rem;
   letter-spacing: 1px;
@@ -185,18 +181,14 @@ body {
 }
 .calendar-weekdays {
   display: flex;
-  gap: 1.6rem;
   font-size: 1.4rem;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  justify-content: space-between;
   margin-bottom: 2rem;
 }
 .dates {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  align-items: center;
-
   justify-items: center;
   font-size: 1.2rem;
   gap: 1.2rem;
@@ -223,4 +215,11 @@ body {
   background-color: #212529;
   border-radius: 50%;
   font-weight: 600;
+}
+.inactive {
+  color: #aaa;
+}
+
+.date.all-tasks-finished::after {
+  background-color: #28a745;
 }

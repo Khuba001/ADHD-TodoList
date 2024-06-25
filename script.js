@@ -19,8 +19,10 @@ const prevBtn = document.querySelector(".icon-left");
 const nextBtn = document.querySelector(".icon-right");
 
 let now = new Date();
+const taskByDay = JSON.parse(localStorage.getItem("taskByDay")) || {};
+let selectedDate = now.toISOString().split("T")[0];
 
-const addTask = function (date) {
+const addTask = function () {
   const task = {
     name: inputTask.value,
     isFinished: false,
@@ -28,28 +30,46 @@ const addTask = function (date) {
 
   if (!task.name) alert("Okno nie może być puste!");
   else {
-    let markup = `
-    <div class='task-container'>
-    <li class="tasks-list-item" draggable='true'>${task.name}<span class='task-after'></span></li>
-    </div>
-      `;
-
-    localStorage.setItem("tasks", JSON.stringify(task.name));
-    taskList.insertAdjacentHTML("beforeend", markup);
+    if (!taskByDay[selectedDate]) {
+      taskByDay[selectedDate] = [];
+    }
+    taskByDay[selectedDate].push(task);
+    localStorage.setItem("tasksByDay", JSON.stringify(taskByDay));
+    renderTasks(selectedDate);
+    inputTask.value = "";
   }
 };
 
 btnAdd.addEventListener("click", (e) => {
   e.preventDefault();
   addTask();
-  inputTask.value = "";
 });
+
+const renderTasks = function (date) {
+  taskList.innerHTML = "";
+  if (taskByDay[date]) {
+    taskByDay[date].forEach((task) => {
+      let markup = `
+      <div class='task-container'>
+      <li class="tasks-list-item" draggable='true'>${task.name}<span class='task-after'></span></li>
+      </div>
+        `;
+      taskList.insertAdjacentHTML("beforeend", markup);
+    });
+  }
+};
 
 taskList.addEventListener("click", (e) => {
   if (e.target.classList.contains("task-after")) {
     const el = e.target.closest(".tasks-list-item");
     el.classList.toggle("tasks-list-item-finished");
     e.target.classList.toggle("task-after-finished");
+
+    const taskName = el.textContent.trim();
+    taskByDay[selectedDate].forEach((task) => {
+      if (task.name === taskName) task.isFinished = !task.isFinished;
+    });
+    localStorage.setItem("tasksByDay", JSON.stringify(taskByDay));
   }
 });
 
@@ -57,12 +77,8 @@ const currentDateDisplay = function (date) {
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
-  const hour = String(date.getHours()).padStart(2, "0");
-  const minute = String(date.getMinutes()).padStart(2, "0");
-  const seconds = String(date.getSeconds()).padStart(2, "0");
 
   dateCurrent.textContent = `${day}/${month}/${year}`;
-  timeCurrent.textContent = `${hour}:${minute}:${seconds}`;
 };
 
 let beignDragged;
@@ -80,6 +96,10 @@ leftSide.addEventListener("dragover", (e) => {
 leftSide.addEventListener("drop", (e) => {
   e.preventDefault();
   if (beignDragged) {
+    const taskName = beignDragged.textContent.trim();
+    taskByDay[selectedDate] = taskByDay[selectedDate].filter(
+      (task) => task !== taskName
+    );
     beignDragged.remove();
   }
 });
@@ -89,6 +109,10 @@ rightSide.addEventListener("dragover", (e) => e.preventDefault());
 rightSide.addEventListener("drop", function (e) {
   e.preventDefault();
   if (beignDragged) {
+    const taskName = beignDragged.textContent.trim();
+    taskByDay[selectedDate] = taskByDay[selectedDate].filter(
+      (task) => task !== taskName
+    );
     beignDragged.remove();
   }
 });
@@ -136,9 +160,13 @@ const updateCalendar = function (date) {
       year === day.getFullYear() &&
       month == day.getMonth()
     ) {
-      datesElement.innerHTML += `<div class='date active'>${i}</div>`;
+      datesElement.innerHTML += `<div class='date active' date-data='${year}-${String(
+        month + 1
+      ).padStart(2, "0")}-${String(i).padStart(2, "0")}'>${i}</div>`;
     } else {
-      datesElement.innerHTML += `<div class='date'>${i}</div>`;
+      datesElement.innerHTML += `<div class='date' date-data='${year}-${String(
+        month + 1
+      ).padStart(2, "0")}-${String(i).padStart(2, "0")}'>${i}</div>`;
     }
   }
 
@@ -164,6 +192,13 @@ updateCalendar(now);
 
 datesElement.addEventListener("click", (e) => {
   if (e.target.classList.contains("date")) {
-    const selectedDate = e.target.dataset.date;
+    selectedDate = e.target.getAttribute("date-data");
+    console.log(selectedDate);
+    renderTasks(selectedDate);
+
+    document
+      .querySelectorAll(".date")
+      .forEach((date) => date.classList.remove("active"));
   }
+  e.target.classList.add("active");
 });
