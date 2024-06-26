@@ -45,15 +45,31 @@ btnAdd.addEventListener("click", (e) => {
   addTask();
 });
 
+const checkFinished = function (date) {
+  if (taskByDay[date]) return taskByDay[date].every((task) => task.isFinished);
+  else {
+    return false;
+  }
+};
+
+const updateFinishedCalendar = function () {
+  if (checkFinished(selectedDate)) {
+    document.querySelectorAll(".date").forEach((date) => {
+      if (date.getAttribute("date-data") === selectedDate) {
+        date.classList.add("all-tasks-finished");
+      }
+    });
+  }
+};
+
 const renderTasks = function (date) {
   taskList.innerHTML = "";
-  console.log(taskByDay[selectedDate]);
   if (taskByDay[date]) {
     taskByDay[date].forEach((task) => {
       if (task.isFinished === true) {
         let markup = `
       <div class='task-container'>
-      <li class="tasks-list-item tasks-list-item-finished" draggable='true'>${task.name}<span class='task-after '></span></li>
+      <li class="tasks-list-item tasks-list-item-finished" draggable='true'>${task.name}<span class='task-after task-after-finished'></span></li>
       </div>
         `;
         taskList.insertAdjacentHTML("beforeend", markup);
@@ -65,6 +81,7 @@ const renderTasks = function (date) {
         `;
         taskList.insertAdjacentHTML("beforeend", markup);
       }
+      updateFinishedCalendar();
     });
   }
 };
@@ -80,6 +97,7 @@ taskList.addEventListener("click", (e) => {
       if (task.name === taskName) task.isFinished = !task.isFinished;
     });
     localStorage.setItem("taskByDay", JSON.stringify(taskByDay));
+    updateFinishedCalendar();
   }
 });
 
@@ -184,6 +202,7 @@ const updateCalendar = function (date) {
   for (let i = 1; i < 7 - lastDayIndex; i++) {
     datesElement.innerHTML += `<div class='date inactive'>${i}</div>`;
   }
+  updateFinishedCalendar();
 };
 
 prevBtn.addEventListener("click", function () {
@@ -197,7 +216,7 @@ nextBtn.addEventListener("click", function () {
 });
 
 updateCalendar(now);
-
+renderTasks(selectedDate);
 // DATES AND OTHER LISTS
 
 datesElement.addEventListener("click", (e) => {
@@ -212,3 +231,5 @@ datesElement.addEventListener("click", (e) => {
     e.target.classList.add("active");
   }
 });
+
+// ZROBIC TAK ZEBY OD RAZU SIE ZMIENIALO TLO W TASK DAY CALENDAR
