@@ -146,7 +146,6 @@ rightSide.addEventListener("drop", function (e) {
 });
 
 currentDateDisplay(now);
-setInterval(() => currentDateDisplay(new Date()), 1000);
 
 // CALENDAR FUNCTIONS
 
@@ -172,7 +171,6 @@ const updateCalendar = function (date) {
   calendarYear.textContent = yearString;
   calendarMonth.textContent = monthString;
   datesElement.innerHTML = "";
-
   // Days from previous month to fill the first week
   const prevMonthLastDay = new Date(year, month, 0).getDate();
   for (let i = firstDayIndex - 1; i >= 0; i--) {
@@ -192,9 +190,22 @@ const updateCalendar = function (date) {
         month + 1
       ).padStart(2, "0")}-${String(i).padStart(2, "0")}'>${i}</div>`;
     } else {
-      datesElement.innerHTML += `<div class='date' date-data='${year}-${String(
-        month + 1
-      ).padStart(2, "0")}-${String(i).padStart(2, "0")}'>${i}</div>`;
+      if (
+        checkFinished(
+          `${year}-${String(month + 1).padStart(2, "0")}-${String(i).padStart(
+            2,
+            "0"
+          )}`
+        )
+      ) {
+        datesElement.innerHTML += `<div class='date  all-tasks-finished' date-data='${year}-${String(
+          month + 1
+        ).padStart(2, "0")}-${String(i).padStart(2, "0")}'>${i}</div>`;
+      } else {
+        datesElement.innerHTML += `<div class='date' date-data='${year}-${String(
+          month + 1
+        ).padStart(2, "0")}-${String(i).padStart(2, "0")}'>${i}</div>`;
+      }
     }
   }
 
@@ -202,7 +213,6 @@ const updateCalendar = function (date) {
   for (let i = 1; i < 7 - lastDayIndex; i++) {
     datesElement.innerHTML += `<div class='date inactive'>${i}</div>`;
   }
-  updateFinishedCalendar();
 };
 
 prevBtn.addEventListener("click", function () {
