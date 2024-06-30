@@ -59,6 +59,12 @@ const updateFinishedCalendar = function () {
         date.classList.add("all-tasks-finished");
       }
     });
+  } else {
+    document.querySelectorAll(".date").forEach((date) => {
+      if (date.getAttribute("date-data") === selectedDate) {
+        date.classList.remove("all-tasks-finished");
+      }
+    });
   }
 };
 
@@ -124,11 +130,13 @@ leftSide.addEventListener("dragover", (e) => {
 leftSide.addEventListener("drop", (e) => {
   e.preventDefault();
   if (beignDragged) {
-    const taskName = beignDragged.textContent.trim();
+    const taskName = beignDragged.textContent;
     taskByDay[selectedDate] = taskByDay[selectedDate].filter(
-      (task) => task !== taskName
+      (task) => task.name !== taskName
     );
     beignDragged.remove();
+    localStorage.setItem("taskByDay", JSON.stringify(taskByDay));
+    updateFinishedCalendar();
   }
 });
 
@@ -137,11 +145,13 @@ rightSide.addEventListener("dragover", (e) => e.preventDefault());
 rightSide.addEventListener("drop", function (e) {
   e.preventDefault();
   if (beignDragged) {
-    const taskName = beignDragged.textContent.trim();
+    const taskName = beignDragged.textContent;
     taskByDay[selectedDate] = taskByDay[selectedDate].filter(
-      (task) => task !== taskName
+      (task) => task.name !== taskName
     );
     beignDragged.remove();
+    localStorage.setItem("taskByDay", JSON.stringify(taskByDay));
+    updateFinishedCalendar();
   }
 });
 
@@ -242,4 +252,4 @@ datesElement.addEventListener("click", (e) => {
   }
 });
 
-// ZROBIC TAK ZEBY OD RAZU SIE ZMIENIALO TLO W TASK DAY CALENDAR
+// fix kiedy sie wypelni wszystkie taski i usunie zadania to nadal jest zaznaczone jako ukonczone , prev i next month days tez zanazoncze
