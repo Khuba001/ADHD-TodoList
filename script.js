@@ -59,7 +59,8 @@ const updateFinishedCalendar = function () {
         date.classList.add("all-tasks-finished");
       }
     });
-  } else {
+  }
+  if (!checkFinished(selectedDate) || taskByDay[selectedDate].length === 0) {
     document.querySelectorAll(".date").forEach((date) => {
       if (date.getAttribute("date-data") === selectedDate) {
         date.classList.remove("all-tasks-finished");
@@ -135,8 +136,11 @@ leftSide.addEventListener("drop", (e) => {
       (task) => task.name !== taskName
     );
     beignDragged.remove();
+
     localStorage.setItem("taskByDay", JSON.stringify(taskByDay));
-    updateFinishedCalendar();
+    if (taskByDay[selectedDate].length === 0) {
+      updateFinishedCalendar();
+    }
   }
 });
 
@@ -151,7 +155,9 @@ rightSide.addEventListener("drop", function (e) {
     );
     beignDragged.remove();
     localStorage.setItem("taskByDay", JSON.stringify(taskByDay));
-    updateFinishedCalendar();
+    if (taskByDay[selectedDate].length === 0) {
+      updateFinishedCalendar();
+    }
   }
 });
 
@@ -252,4 +258,4 @@ datesElement.addEventListener("click", (e) => {
   }
 });
 
-// fix kiedy sie wypelni wszystkie taski i usunie zadania to nadal jest zaznaczone jako ukonczone , prev i next month days tez zanazoncze
+// prev i next month days tez zanazoncze
