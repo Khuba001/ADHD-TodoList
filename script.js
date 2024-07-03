@@ -190,9 +190,35 @@ const updateCalendar = function (date) {
   // Days from previous month to fill the first week
   const prevMonthLastDay = new Date(year, month, 0).getDate();
   for (let i = firstDayIndex - 1; i >= 0; i--) {
-    datesElement.innerHTML += `<div class="date inactive">${
-      prevMonthLastDay - i
-    }</div>`;
+    // datesElement.innerHTML += `<div class="date inactive" date-data='${year}-${String(
+    //   month
+    // ).padStart(2, "0")}-${String(prevMonthLastDay - i).padStart(2, "0")}'">${
+    //   prevMonthLastDay - i
+    // }</div>`;
+    if (
+      checkFinished(
+        `${year}-${String(month).padStart(2, "0")}-${String(
+          prevMonthLastDay - i
+        ).padStart(2, "0")}`
+      ) &&
+      taskByDay[
+        `${year}-${String(month).padStart(2, "0")}-${String(
+          prevMonthLastDay - i
+        ).padStart(2, "0")}`
+      ].length > 0
+    ) {
+      datesElement.innerHTML += `<div class='date inactive all-tasks-finished' date-data='${year}-${String(
+        month
+      ).padStart(2, "0")}-${String(prevMonthLastDay - i).padStart(2, "0")}'>${
+        prevMonthLastDay - i
+      }</div>`;
+    } else {
+      datesElement.innerHTML += `<div class='date inactive' date-data='${year}-${String(
+        month
+      ).padStart(2, "0")}-${String(prevMonthLastDay - i).padStart(2, "0")}'>${
+        prevMonthLastDay - i
+      }</div>`;
+    }
   }
 
   // Days in current month
@@ -212,7 +238,13 @@ const updateCalendar = function (date) {
             2,
             "0"
           )}`
-        )
+        ) &&
+        taskByDay[
+          `${year}-${String(month + 1).padStart(2, "0")}-${String(i).padStart(
+            2,
+            "0"
+          )}`
+        ].length > 0
       ) {
         datesElement.innerHTML += `<div class='date  all-tasks-finished' date-data='${year}-${String(
           month + 1
@@ -227,7 +259,32 @@ const updateCalendar = function (date) {
 
   // Days from next month to fill the last week
   for (let i = 1; i < 7 - lastDayIndex; i++) {
-    datesElement.innerHTML += `<div class='date inactive'>${i}</div>`;
+    //   datesElement.innerHTML += `<div class='date inactive' date-data='${year}-${String(
+    //     month + 2
+    //   ).padStart(2, "0")}-${String(i).padStart(2, "0")}'>${i}</div>`;
+    // }
+    if (
+      checkFinished(
+        `${year}-${String(month + 2).padStart(2, "0")}-${String(i).padStart(
+          2,
+          "0"
+        )}`
+      ) &&
+      taskByDay[
+        `${year}-${String(month + 2).padStart(2, "0")}-${String(i).padStart(
+          2,
+          "0"
+        )}`
+      ].length > 0
+    ) {
+      datesElement.innerHTML += `<div class='date  all-tasks-finished' date-data='${year}-${String(
+        month + 2
+      ).padStart(2, "0")}-${String(i).padStart(2, "0")}'>${i}</div>`;
+    } else {
+      datesElement.innerHTML += `<div class='date' date-data='${year}-${String(
+        month + 2
+      ).padStart(2, "0")}-${String(i).padStart(2, "0")}'>${i}</div>`;
+    }
   }
 };
 
@@ -257,5 +314,3 @@ datesElement.addEventListener("click", (e) => {
     e.target.classList.add("active");
   }
 });
-
-// prev i next month days tez zanazoncze
