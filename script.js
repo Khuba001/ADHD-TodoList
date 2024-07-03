@@ -277,11 +277,11 @@ const updateCalendar = function (date) {
         )}`
       ].length > 0
     ) {
-      datesElement.innerHTML += `<div class='date  all-tasks-finished' date-data='${year}-${String(
+      datesElement.innerHTML += `<div class='date inactive  all-tasks-finished' date-data='${year}-${String(
         month + 2
       ).padStart(2, "0")}-${String(i).padStart(2, "0")}'>${i}</div>`;
     } else {
-      datesElement.innerHTML += `<div class='date' date-data='${year}-${String(
+      datesElement.innerHTML += `<div class='date inactive' date-data='${year}-${String(
         month + 2
       ).padStart(2, "0")}-${String(i).padStart(2, "0")}'>${i}</div>`;
     }
