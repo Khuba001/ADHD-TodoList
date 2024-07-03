@@ -285,6 +285,9 @@ prevBtn.addEventListener("click", function () {
 });
 
 nextBtn.addEventListener("click", function () {
+  if (now.getMonth > 12) {
+    now.setMonth(0);
+  }
   now.setMonth(now.getMonth() + 1);
   updateCalendar(now);
 });
@@ -305,5 +308,3 @@ datesElement.addEventListener("click", (e) => {
     e.target.classList.add("active");
   }
 });
-
-//  TO fix : adding tasks to next year dates so it doesnt go over 12 month to 13,14,...
